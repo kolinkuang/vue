@@ -45,6 +45,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+// TODO 组件数据初始化
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -110,6 +111,7 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
+  // TODO 获取用户设置的 data 选项
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
@@ -129,6 +131,7 @@ function initData (vm: Component) {
   let i = keys.length
   while (i--) {
     const key = keys[i]
+    // TODO 校验
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -148,6 +151,7 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // TODO 响应式处理
   observe(data, true /* asRootData */)
 }
 
@@ -342,6 +346,8 @@ export function stateMixin (Vue: Class<Component>) {
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  // TODO unwatch = vm.$watch('$route', newVal => {})
+  // TODO vm.$watch('$route', { ... })
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
@@ -352,7 +358,8 @@ export function stateMixin (Vue: Class<Component>) {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
-    options.user = true
+    options.user = true // TODO 用户选项触发的，属于 user watcher
+    // TODO $watch 也会创建 Watcher 实例
     const watcher = new Watcher(vm, expOrFn, cb, options)
     if (options.immediate) {
       try {

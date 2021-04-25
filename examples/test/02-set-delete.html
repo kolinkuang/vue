@@ -1,0 +1,24 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Vue 源码剖析</title>
+<script src="../../dist/vue.js"></script>
+
+<div id="demo">
+  <h1>Set/Delete</h1>
+  <p>{{obj.foo}}</p>
+</div>
+<script>
+  const Vue = window.Vue
+  const app = new Vue({
+    el: '#demo',
+    data() {
+      return {
+        obj: {}
+      }
+    },
+    created() {
+      setTimeout(() => {
+        Vue.set(this.obj, 'foo', 'fooooooooo')
+      }, 1000)
+    }
+  })
+</script>

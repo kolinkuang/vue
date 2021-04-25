@@ -34,6 +34,9 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+// TODO 核心目的：
+// TODO 1.区分传入对象类型(Array or Object)，做不同响应式处理
+// TODO 2.对对象动态新增或者删除属性进行响应
 export class Observer {
   value: any;
   dep: Dep;
@@ -41,10 +44,16 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // TODO 内部还创建了一个 Dep 实例，负责变更通知
+    // TODO dep.notify() => watcher.update() => componentUpdate() =>
+    // TODO render() => _update() => patch()
     this.dep = new Dep()
     this.vmCount = 0
+
+    // TODO 响应式对象上附加 __ob__， 指向当前 Observer 实例
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // TODO 如果存在原型，则直接覆盖
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -54,6 +63,8 @@ export class Observer {
     } else {
       this.walk(value)
     }
+
+    // console.log('Observer instance created')
   }
 
   /**
@@ -111,7 +122,9 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // TODO 获取一个 Ob 实例
   let ob: Observer | void
+  // TODO 响应式对象已经拥有了 Ob ，直接返回
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -121,6 +134,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // TODO 初始化时需要创建
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -139,6 +153,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // TODO 每个 key 对应一个 Dep
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,15 +168,20 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // TODO 递归处理
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      //TODO 获取 key 对应的值
       const value = getter ? getter.call(obj) : val
-      if (Dep.target) {
+      // TODO 依赖收集
+      if (Dep.target) { //TODO Watcher
+        // TODO dep 和 watcher 相互创建引用关系
         dep.depend()
         if (childOb) {
+          // TODO 子对象的 ob 内部的 dep 也要和 watcher 关联
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)

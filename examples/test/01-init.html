@@ -1,0 +1,37 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Vue 源码剖析</title>
+<!--
+<script src="../../dist/vue.js"></script>
+-->
+
+<div id="demo">
+  <h1>初始化流程</h1>
+  <p>{{obj.foo}}</p>
+  <p>{{obj.bar}}</p>
+</div>
+<script type="module">
+  // 会有几个 Observer? Dep? Watcher?
+  // Observer: 2
+  // Dep: 6
+  // Watcher: 1
+  // 一个对象一个 Ob，即一个 observer
+  // 响应式一个 key 一个 dep + Ob 内部的 dep + $attrs.dep + $listeners.dep
+  // 一个组件实例一个 watcher
+  import Vue from '../../dist/vue.esm.browser.js'
+  const app = new Vue({
+    el: '#demo',
+    data: {
+      obj: {
+        foo: 'foo'
+      }
+    },
+    mounted() {
+      // 属性 dep：负责更新已存在属性变化
+      this.obj.foo = 'fooooooo'
+      setTimeout(() => {
+        // __ob__ 中的 dep：负责新增、删除的动态属性的通知更新
+        this.$set(this.obj, 'bar', 'bar')
+      }, 1000)
+    }
+  })
+</script>

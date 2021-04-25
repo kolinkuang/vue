@@ -3,6 +3,7 @@ import { initGlobalAPI } from './global-api/index'
 import { isServerRendering } from 'core/util/env'
 import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
 
+// TODO 初始化全局 API: Vue.component/directive/filter/use/extend/set/delete/mixin/nextTick
 initGlobalAPI(Vue)
 
 Object.defineProperty(Vue.prototype, '$isServer', {

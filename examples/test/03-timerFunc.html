@@ -1,0 +1,41 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Vue 源码剖析</title>
+<script src="../../dist/vue.js"></script>
+
+<div id="demo">
+  <h1>TimerFunc</h1>
+  <p id="p1">{{foo}}</p>
+</div>
+<script>
+  const Vue = window.Vue
+  const app = new Vue({
+    el: '#demo',
+    data: { foo: 'ready~'},
+    mounted() {
+      // callbacks [cb1, flushSchedulerQueue]
+      // 微任务 [flushCallbacks]
+      // this.$nextTick(() => {
+      //   console.log('p1.innerHTML:', p1.innerHTML)
+      // })
+      this.foo = Math.random()
+      console.log('1:', this.foo)
+      this.foo = Math.random()
+      console.log('2:', this.foo)
+      this.foo = Math.random()
+      console.log('3:', this.foo)
+
+      // Note: Vue 可以直接根据 Element ID 试别到 DOM 元素
+      console.log('p1.innerHTML:', p1.innerHTML)
+
+      // callbacks [flushSchedulerQueue, cb2]
+      // 微任务 [flushCallbacks, cb1]
+      Promise.resolve().then(() => {
+        console.log('promise:', p1.innerHTML)
+      })
+
+      this.$nextTick(() => {
+        console.log('p1.innerHTML:', p1.innerHTML)
+      })
+    }
+  })
+</script>

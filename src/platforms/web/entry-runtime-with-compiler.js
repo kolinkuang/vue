@@ -14,11 +14,13 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// TODO 扩展 $mount()
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // TODO 查找宿主元素（真实 DOM）
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -29,6 +31,10 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // TODO 获取根组件选项
+  // TODO 优先级：render() > template > el
+  // TODO template, el 的存在就是为了生成 render()
+  // TODO 只有 render() 不存在才有必要查看 template 或 el 选项
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
@@ -54,6 +60,7 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      // TODO 最后查看 el 选项，将 el 的 outerHTML 作为模板
       template = getOuterHTML(el)
     }
     if (template) {
@@ -79,6 +86,8 @@ Vue.prototype.$mount = function (
       }
     }
   }
+
+  // TODO 执行默认的挂载行为
   return mount.call(this, el, hydrating)
 }
 

@@ -13,6 +13,9 @@ export function initEvents (vm: Component) {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
   // init parent attached events
+  // TODO 观察者模式：组件的派发与监听是同一实例
+  // TODO vm.$on('myEvent', handler)
+  // TODO vm.$emit('myEvent')
   const listeners = vm.$options._parentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)

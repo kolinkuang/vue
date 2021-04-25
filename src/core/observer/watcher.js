@@ -42,6 +42,7 @@ export default class Watcher {
   getter: Function;
   value: any;
 
+  // TODO new Watcher(this, componentUpdate)
   constructor (
     vm: Component,
     expOrFn: string | Function,
@@ -93,6 +94,8 @@ export default class Watcher {
     this.value = this.lazy
       ? undefined
       : this.get()
+
+    // console.log('Watcher instance created')
   }
 
   /**
@@ -127,9 +130,12 @@ export default class Watcher {
    */
   addDep (dep: Dep) {
     const id = dep.id
+    // TODO 如果没有保存和 dep 关系
     if (!this.newDepIds.has(id)) {
+      // TODO 保存相关 deps
       this.newDepIds.add(id)
       this.newDeps.push(dep)
+      // TODO dep 保存 watcher
       if (!this.depIds.has(id)) {
         dep.addSub(this)
       }
@@ -165,9 +171,10 @@ export default class Watcher {
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true
-    } else if (this.sync) {
+    } else if (this.sync) { // TODO 同步执行
       this.run()
     } else {
+      // TODO 正常情况下走这里
       queueWatcher(this)
     }
   }

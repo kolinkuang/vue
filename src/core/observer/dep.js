@@ -18,6 +18,7 @@ export default class Dep {
   constructor () {
     this.id = uid++
     this.subs = []
+    // console.log('Dep instance created')
   }
 
   addSub (sub: Watcher) {
@@ -44,6 +45,7 @@ export default class Dep {
       subs.sort((a, b) => a.id - b.id)
     }
     for (let i = 0, l = subs.length; i < l; i++) {
+      // subs 是 dep 管理的所有 watcher 实例
       subs[i].update()
     }
   }

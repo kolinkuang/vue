@@ -1,0 +1,23 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Vue 源码剖析</title>
+<script src="../../dist/vue.js"></script>
+
+<body>
+  <div id="demo">
+    <h1>Vue 组件化机制</h1>
+    <comp></comp>
+  </div>
+  <script>
+    Vue.component('comp', {
+      template: '<div>I am comp</div>'
+    })
+    // 创建实例
+    // Parent create
+    //   Child created
+    //   Child mounted
+    // Parent mounted
+    const app = new Vue({
+      el: '#demo',
+    })
+  </script>
+</body>

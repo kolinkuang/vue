@@ -186,7 +186,12 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // TODO updateComponent() 合适执行？
+    // TODO 当 watcher.run() 被调用时候
     updateComponent = () => {
+      console.log('==== VDOM start ====')
+      console.log(vm._render())
+      console.log('==== VDOM end ====')
       vm._update(vm._render(), hydrating)
     }
   }

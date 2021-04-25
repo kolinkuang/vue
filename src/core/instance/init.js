@@ -29,6 +29,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    //TODO 1.选项合并：系统默认选项和用户选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -48,15 +49,17 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
+    // TODO 2.核心初始化过程
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
+    initLifecycle(vm) //TODO 初始化 parent/root/refs/children
+    initEvents(vm) //TODO 组件上自定义事件监听(_events)
+    initRender(vm) //TODO 初始化 $slots/$scopeSlots/_c/$createElement()
+    callHook(vm, 'beforeCreate') // TODO 调用 beforeCreate() 钩子
+    // TODO 3.处理组件数据和状态
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) //TODO 初始化 props/data/methods/computed/watch
     initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    callHook(vm, 'created') // TODO 调用 created() 钩子
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -65,6 +68,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    //TODO 如果设置了 $el，则直接调用 $mount
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

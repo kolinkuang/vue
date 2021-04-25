@@ -30,7 +30,7 @@ function flushCallbacks () {
 // where microtasks have too high a priority and fire in between supposedly
 // sequential events (e.g. #4521, #6690, which have workarounds)
 // or even between bubbling of the same event (#6566).
-let timerFunc
+let timerFunc // TODO 定义异步执行策略
 
 // The nextTick behavior leverages the microtask queue, which can be accessed
 // via either native Promise.then or MutationObserver.
@@ -84,8 +84,11 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// TODO: 将传入的 cb 函数入微任务队列
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // TODO 封装高阶函数就是为了捕获可能出现的错误，
+  // TODO 并异步执行 cb()
   callbacks.push(() => {
     if (cb) {
       try {
@@ -97,8 +100,11 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve(ctx)
     }
   })
+
+  //TODO 如果处于空闲状态
   if (!pending) {
     pending = true
+    // 启动异步任务
     timerFunc()
   }
   // $flow-disable-line

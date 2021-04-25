@@ -13,6 +13,9 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   options: CompilerOptions
 ): CompiledResult {
   const ast = parse(template.trim(), options)
+  console.log('**** AST start ****')
+  console.log(ast)
+  console.log('**** AST end ****')
   if (options.optimize !== false) {
     optimize(ast, options)
   }

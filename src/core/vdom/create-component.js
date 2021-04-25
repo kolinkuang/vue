@@ -35,6 +35,7 @@ import {
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
+    // TODO 组件实例已存在，一般是 keepAlive
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
@@ -44,10 +45,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // TODO 新子组件创建过程
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // TODO 子组件挂载
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -98,6 +101,7 @@ const componentVNodeHooks = {
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
+// TODO 创建组件虚拟 DOM
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -144,12 +148,14 @@ export function createComponent (
     }
   }
 
+  // TODO 处理组件的各种属性和事件
   data = data || {}
 
   // resolve constructor options in case global mixins are applied after
   // component constructor creation
   resolveConstructorOptions(Ctor)
 
+  // TODO 双向绑定的额外处理
   // transform component v-model data into props & events
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
@@ -165,9 +171,11 @@ export function createComponent (
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // TODO 用户自定义事件
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
+  // TODO 原生事件
   data.on = data.nativeOn
 
   if (isTrue(Ctor.options.abstract)) {
@@ -182,9 +190,11 @@ export function createComponent (
     }
   }
 
+  // TODO 安装组件的管理钩子
   // install component management hooks onto the placeholder node
   installComponentHooks(data)
 
+  // TODO 给组件起名
   // return a placeholder vnode
   const name = Ctor.options.name || tag
   const vnode = new VNode(
@@ -223,6 +233,8 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+// TODO 用户可以传递管理钩子
+//  跟组件生命周期钩子又不一样
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
