@@ -575,6 +575,8 @@ export function createPatchFunction (backend) {
 
     // TODO 属性更新
     if (isDef(data) && isPatchable(vnode)) {
+      // TODO Vue 2 缺点：每次打补丁都会触发所有（7个）更新函数更新，效率较低
+      //  updateAttrs/updateClass/updateDOMListeners/updateDOMProps/updateStyle/update/updateDirectives
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
     }
